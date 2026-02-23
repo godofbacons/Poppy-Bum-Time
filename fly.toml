@@ -1,0 +1,26 @@
+# fly.toml — Playtime Co. Party Server
+# Generated for fly.io deployment
+
+app = "playtime-party"          # ← Change this to your chosen app name
+primary_region = "lax"         # Los Angeles — change to nearest: ewr=NY, lhr=London, sin=Singapore
+
+[build]
+  # fly.io auto-detects Node.js via package.json — no Dockerfile needed
+
+[env]
+  PORT = "8080"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = false    # Keep alive so parties don't drop
+  auto_start_machines = true
+  min_machines_running = 1      # Always one instance up
+
+  [http_service.concurrency]
+    type = "connections"
+    hard_limit = 200            # Max 200 simultaneous WebSocket connections
+    soft_limit = 150
+
+[[vm]]
+  size = "shared-cpu-1x"       # Free tier — 256MB RAM, more than enough
